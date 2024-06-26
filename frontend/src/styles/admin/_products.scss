@@ -1,0 +1,145 @@
+.dashboardProductTable{
+    background-color: white;
+    padding: 2rem;
+    overflow: auto;
+    @include square(100%);
+}
+.addNewProduct{
+   position:fixed;
+   top: 2rem;
+   right: 2rem;
+   @include square(2.5rem);
+   @include flex(row,center,center,0);
+   background-color: red;
+   color: white;
+   border-radius: 50%;
+   &:hover{
+    opacity:0.8;
+   }
+}
+
+.managementBox{
+   @include flex(row,center,unset);
+   padding: 4rem;
+   >section{
+    padding: 5rem;
+    overflow-y: auto;
+    background-color: white;
+    height: 85vh;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0px 5px 5px solid rgb(0,0,0,.216);
+    @include flex(column,unset,unset,1px);
+    position: relative;
+    border-radius: 5px;
+    >strong{
+        font-weight: 300; 
+    }
+    >h2{
+        @include heading(2px);
+        text-align:center;
+    }
+    >span{
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+    }
+    >p{
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-align: center;
+    }
+    >h3{
+        text-align: center;
+        font-size: 2rem;
+    }
+   }
+    > article{
+      
+        background-color: white;
+        padding: 2rem;
+        height: 85vh;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
+        border-radius: 5px;
+        >form{
+            @include flex(column,unset,center,2rem);
+            >h2{
+                text-transform: uppercase;
+                letter-spacing: 3px;
+            }
+            >img{
+                @include square(5rem);
+                object-fit: cover;
+                border-radius: 5px;
+            }
+        >div{
+            width: 100%;
+            position: relative;
+        
+        >label{
+            position: absolute;
+            left: 0;
+            top:-1.5rem;
+        }
+        >input{
+            @include inputStyle(100%,1rem,unset,1px solid rgba(13,13,13,0.196));
+            border-radius:5px ;
+        }
+        }
+        >button{
+            padding :1rem;
+            border: none;
+            background-color: rgb(5,127,204);
+            color: white;
+            width: 100%;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1.1rem;
+        }
+    }
+    }
+    .shippingInfo{
+        >h1{
+            text-align: center;
+            @include heading(2px);
+        }
+        >h5{
+            margin: 2rem 0rem 0rem 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        >P{
+            margin: 0.5rem;
+        }
+        >button{
+            padding :1rem;
+            border: none;
+            background-color: rgb(5,127,204);
+            color: white;
+            width: 100%;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            &:hover{
+                opacity: 0.8;
+            }
+        }
+    }
+}
+
+
+.transactionBox{
+    @include flex(row,unset,center,1rem);
+    >img{
+        @include square(4rem);
+        object-fit: cover;
+        border-radius:5px ;
+        >span{
+            margin-left: auto;
+        }
+        
+    }
+   
+}

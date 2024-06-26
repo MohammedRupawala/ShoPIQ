@@ -1,0 +1,23 @@
+.barBox{
+    background-color: white;
+    padding: 4rem;
+    overflow-y: auto;
+    >h1{
+        margin: 0rem,0rem,5rem,2rem;
+    }
+    >section{
+        width: 80%;
+        margin: 4rem auto;
+        >div{
+            margin: auto;
+            margin-top: 6rem;
+            margin-bottom: -1rem;
+            max-width: 25rem;
+        }
+        >h2{
+            margin: 2rem;
+            text-align: center;
+            @include heading(2px)
+        }
+    }
+}
