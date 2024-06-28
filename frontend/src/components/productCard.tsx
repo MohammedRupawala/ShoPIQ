@@ -13,7 +13,7 @@ const ProductCard = ({name,photo,productId,stock,price,handler}:ProductProps) =>
   return (
     <div className='productCard'>
          <img src={photo} alt={name}/>
-         <p>name</p>
+         <p>{name}</p>
          <span>${price}</span>
         <div>
             <button onClick={()=>handler()}>

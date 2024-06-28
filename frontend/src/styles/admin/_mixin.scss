@@ -45,3 +45,9 @@ $gap:1rem){
     $c:color;
     $cur:cursor
 }
+@mixin btn($p:0.5rem 1rem){
+    outline: none;
+    border: none;
+    cursor: pointer;
+    padding: $p;
+}
