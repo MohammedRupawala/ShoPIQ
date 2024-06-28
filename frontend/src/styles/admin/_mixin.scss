@@ -39,4 +39,9 @@ $gap:1rem){
     width : $s;
     height: $s;
 }
-
+@mixin button($b:none,$br:100%,$c:blue,$cur:pointer){
+    $b:border;
+    $br:border-radius;
+    $c:color;
+    $cur:cursor
+}
