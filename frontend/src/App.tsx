@@ -1,6 +1,7 @@
 import { Suspense, lazy, useState } from 'react'
 import { BrowserRouter,Routes,Route } from 'react-router-dom'
 import Loader from "./components/Loader"
+import Header from './components/header'
 const Home = lazy(()=>import("./pages/home"))
 const Cart = lazy(()=>import("./pages/cart"))
 const Search = lazy(()=>import("./pages/search"))
@@ -26,11 +27,14 @@ function App() {
     <>
      <BrowserRouter>
      <Suspense fallback={<Loader/>}>
-      <Routes>
+     <Header/>
+     <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/cart" element={<Cart/>}/>
         <Route path="/search" element={<Search/>}/>
+
                   {/* admin Routes */}
+        <Route>
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/products" element={<Products />} />
         <Route path="/admin/customer" element={<Customer />} />
@@ -47,8 +51,6 @@ function App() {
         <Route path="/admin/apps/stopwatch" element={<StopWatch />} />
         <Route path="/admin/apps/coupongenerator" element={<CouponGenerator />} />
         <Route path="/admin/apps/toss" element={<Toss />} />
-      <Route>
-
       </Route>
         
       </Routes>
