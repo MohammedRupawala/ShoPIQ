@@ -1,3 +1,5 @@
+import { Request,Response,NextFunction } from "express"
+
 export interface userType  {
     name: string,
     photo : string,
@@ -7,3 +9,10 @@ export interface userType  {
     dob:Date
 
 }
+
+
+export type controllerType =  ( 
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => Promise<void>
