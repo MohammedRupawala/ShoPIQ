@@ -7,7 +7,8 @@ app.post("/new",adminMiddleware,singleUpload,newProduct)
 app.get("/latest",getLatestProduct)
 app.get("/admin-products",adminMiddleware,getAdminProducts)
 app.get("/categories",getAllCategories)
-app.route("/:id").get(getSingleProduct).put(adminMiddleware,singleUpload,updateProduct).delete(adminMiddleware,deleteProduct)
 //get All Product with Filter
 app.get("/all",searchProduct)
+app.route("/:id").get(getSingleProduct).put(adminMiddleware,singleUpload,updateProduct).delete(adminMiddleware,deleteProduct)
+
 export default app;
