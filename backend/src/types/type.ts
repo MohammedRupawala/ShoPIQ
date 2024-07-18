@@ -42,5 +42,37 @@ export interface baseQuery {
 export type invalidateCacheProps = {
     product?:boolean,
     order?:boolean,
-    admin?:boolean
+    admin?:boolean,
+    userId?:string,
+    orderId?:string
+    productId?:string | string[]
 }
+export type orderItemsType =  {
+    name :string,
+    photo : string,
+    quantity : number,
+    price : number,
+    productId :string
+}
+export type shippingInfoType =  {
+    address :string,
+    city : string,
+    state : string
+    country : string,
+    pincode : number,
+}
+export interface newOrderBody {
+    shippingInfo : shippingInfoType,
+    subtotal:number,
+    shippingCharges : 0,
+    tax : number,
+    discount : 0,
+    total : number,
+    user : string,
+    orderItems : orderItemsType[]
+}
+
+// export type cachingProps = {
+//     key:string,
+//     element : any
+// }

@@ -58,7 +58,6 @@ export const getAdminProducts = TryCatch(async (req,res,next)=>{
 })
 export const getSingleProduct = TryCatch(async(req,res,next)=>{
     const id = req.params.id
-    if (!id || !isValidObjectId(id)) return next(new errorHandler("Product Not Found", 404));
     let product
     const cacheKey = `product-${id}`
     if(myCache.has(cacheKey)){
@@ -66,7 +65,7 @@ export const getSingleProduct = TryCatch(async(req,res,next)=>{
     }
     else {
      product = await Product.findById(id)
-     if(!product) return  next(new errorHandler("Invalid Product Id",400))
+     if(!product) return  next(new errorHandler("Product Not Found",400))
      myCache.set(cacheKey,JSON.stringify(product))
     }   
        res.status(201).json({
@@ -103,7 +102,7 @@ export const updateProduct = TryCatch(async(req,res,next)=>{
     const {name,price,stock,category}=req.body
     const photo = req.file
     const product = await Product.findById(id)
-    if(!product) return  next(new errorHandler("Invalid Product Id",400))
+    if(!product) return  next(new errorHandler("Product Not Found",400))
         if(photo){
             rm(product.photo,()=>{
                 console.log("Photo Removed")
@@ -118,7 +117,7 @@ export const updateProduct = TryCatch(async(req,res,next)=>{
         
 
         await product.save()
-        await invalidateCache({product:true})
+        await invalidateCache({product:true,productId:String(product._id)})
 
     res.status(201).json({
         success:true,
@@ -129,12 +128,12 @@ export const updateProduct = TryCatch(async(req,res,next)=>{
     export const deleteProduct = TryCatch(async(req,res,next)=>{
         
         const product = await Product.findById(req.params.id)
-        if(!product) return  next(new errorHandler("Invalid Product Id",400))
+        if(!product) return  next(new errorHandler("Product Not Found Id",400))
                 rm(product.photo!,()=>{
                     console.log("Photo Removed")
                 })  
-        await Product.deleteOne()
-        await invalidateCache({product:true})
+        await product.deleteOne()
+        await invalidateCache({product:true,productId:String(product._id)})
  
            res.status(201).json({
             success:true,
