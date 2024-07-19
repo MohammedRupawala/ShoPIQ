@@ -55,6 +55,13 @@ export const decreaseStock = async(orderItems: orderItemsType[]) => {
     }
 }
 
+
+export const calculatePercentage = (thisMonth:number,lastMonth:number)=>{
+    if(lastMonth == 0) return thisMonth * 100
+    const percent = ((thisMonth-lastMonth)/lastMonth) * 100
+    return Number(percent.toFixed(0))
+}
+
 // export const caching = async({key,element}:cachingProps)=>{
 //     if(myCache.has(key)){
 //         element = JSON.parse(myCache.get(key) as string)
