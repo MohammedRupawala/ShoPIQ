@@ -1,3 +1,4 @@
+import { Script } from "vm";
 import { myCache } from "../app.js";
 import { TryCatch } from "../middlewares/error.js";
 import { Order } from "../models/orders.js";
@@ -19,6 +20,8 @@ if(myCache.has(cacheKey)) stats = JSON.parse(myCache.get(cacheKey) as string)
             start : new Date(today.getFullYear(),today.getMonth()-1,1),
             end:new Date(today.getFullYear(),today.getMonth(),0)
         }
+        const sixMonthAgo = new Date()
+        const lastSixMonthAgo = sixMonthAgo.setMonth(sixMonthAgo.getMonth()-6)
 
         const  thisMonthProductPromise =  Product.find({
             createdAt:{
@@ -56,8 +59,14 @@ if(myCache.has(cacheKey)) stats = JSON.parse(myCache.get(cacheKey) as string)
               $lte:lastMonth.end  
             }
         })
-
-        const [
+        const lastSixMonthOrderPromise = Order.find({
+            createdAt : {
+                $gte : lastSixMonthAgo,
+                $lte : today
+            }
+        })
+        const latestTransactionPromise = Order.find({}).select(["orderItems","discount","total","status"]).limit(4)    
+            const [
             thisMonthOrder,
             thisMonthProduct,
             thisMonthUser,
@@ -65,8 +74,12 @@ if(myCache.has(cacheKey)) stats = JSON.parse(myCache.get(cacheKey) as string)
             lastMonthProduct,
             lastMonthUser,
             productCount,
-            UserCount,
-            allOrder
+            userCount,
+            allOrder,
+            lastSixMonthOrders,
+            allCategories,
+            femaleUsers,
+            latestTransaction
         ] = await Promise.all([
             thisMonthOrderPromise,
             thisMonthProductPromise,
@@ -76,8 +89,13 @@ if(myCache.has(cacheKey)) stats = JSON.parse(myCache.get(cacheKey) as string)
             lastMonthUserPromise,
             Product.countDocuments(),
             User.countDocuments(),
-            Order.find({}).select("total")
+            Order.find({}).select("total"),
+            lastSixMonthOrderPromise,
+            Product.distinct("category"),
+            User.countDocuments({gender : "female"}),
+            latestTransactionPromise
         ])
+        console.log("orderItems ")
         // console.log( 
         //     "this Month Order" + thisMonthOrder,
         //     "this Month product" +thisMonthProduct,
@@ -100,17 +118,56 @@ if(myCache.has(cacheKey)) stats = JSON.parse(myCache.get(cacheKey) as string)
         const revenue = allOrder.reduce(
             (total,current)=>total + (current.total || 0 ),0
         )
+        const CategoriesCountPromise = allCategories.map((category)=>Product.countDocuments({category}))
+        const categoriesCount = await Promise.all(CategoriesCountPromise)
+        const categories:Record<string,number>[] = []
+        allCategories.forEach((category,i)=>{
+            categories.push({
+                [category] : Math.round((categoriesCount[i] / productCount) * 100)
+            })
+        })
         const count = {
             revenue,
             product : productCount,
-            user : UserCount,
+            user : userCount,
             order : allOrder.length 
 
         }
-        stats = {
-            percent,
-            count
+        const orderCount = Array(6).fill(0)
+        const orderRevenue = Array(6).fill(0)
+        lastSixMonthOrders.forEach((order)=>{
+            const creation =  order.createdAt
+            const monthDiff = (today.getMonth()-creation.getMonth() + 12) % 12
+            if(monthDiff < 6 ){
+            orderCount[5-monthDiff] += 1
+            orderRevenue[5-monthDiff] += order.total
+            }
+        })
+        const chart = {
+            order : orderCount,
+            revenue : orderRevenue
         }
+        const userRatio = { 
+            male : userCount - femaleUsers,
+            female :femaleUsers
+        }
+        const modifiedTransaction = latestTransaction.map(i=>({
+            _id:i._id,
+            discount:i.discount,
+            quantity:i.orderItems.length,
+            amount:i.total,
+            status:i.status
+
+        }))
+           stats = {
+            percent,
+            categories,
+            count,
+            chart,
+            userRatio,
+            latestTransaction:modifiedTransaction,
+        }
+        myCache.set(cacheKey,JSON.stringify(stats))
 }
 res.status(201).json({
     success :true,

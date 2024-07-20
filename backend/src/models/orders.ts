@@ -53,7 +53,7 @@ const orderSchema = new mongoose.Schema({
     enum : ["Processing" , "Shipped" , "Delivered" ],
     default : "Processing"
    },
-   orderItem: [{
+   orderItems: [{
     name : String,
     photo : String,
     quantity : Number,

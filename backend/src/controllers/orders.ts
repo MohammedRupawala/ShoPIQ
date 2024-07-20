@@ -17,13 +17,8 @@ export const newOrder = TryCatch(async(req:Request<{},{},newOrderBody>,res,next)
         total,
         orderItems
     } =  req.body
-    console.log(shippingCharges,
-        shippingInfo,
-        subtotal,
-        discount,
-        tax,
-        total,
-        orderItems)
+    console.log('Request Body:', req.body); // Log the entire request body
+    console.log("this is orderitem"  + orderItems)
     if( !shippingInfo
         || !subtotal
         || !tax
@@ -41,6 +36,7 @@ export const newOrder = TryCatch(async(req:Request<{},{},newOrderBody>,res,next)
         total,
         orderItems
     })
+    console.log ("hello" + newOrder)
 
     await decreaseStock(orderItems),
     await invalidateCache({product:true,
@@ -80,6 +76,7 @@ export const allOrders = TryCatch(async (req,res,next) =>{
          orders = await Order.find().populate("user","name")
          myCache.set(cacheKey,JSON.stringify(orders))
     }
+    console.log(orders.orderItems)
     res.status(200).json({
         success : true,
         orders
