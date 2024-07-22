@@ -50,7 +50,7 @@ export const decreaseStock = async (orderItems) => {
 export const calculatePercentage = (thisMonth, lastMonth) => {
     if (lastMonth == 0)
         return thisMonth * 100;
-    const percent = ((thisMonth - lastMonth) / lastMonth) * 100;
+    const percent = ((thisMonth) / lastMonth) * 100;
     return Number(percent.toFixed(0));
 };
 // export const caching = async({key,element}:cachingProps)=>{
@@ -58,3 +58,25 @@ export const calculatePercentage = (thisMonth, lastMonth) => {
 //         element = JSON.parse(myCache.get(key) as string)
 //    }
 // }
+export const getInventory = async ({ allCategories, productCount }) => {
+    const CategoriesCountPromise = allCategories.map((category) => Product.countDocuments({ category }));
+    const categoriesCount = await Promise.all(CategoriesCountPromise);
+    const categories = [];
+    allCategories.forEach((category, i) => {
+        categories.push({
+            [category]: Math.round((categoriesCount[i] / productCount) * 100)
+        });
+    });
+    return categories;
+};
+export const getCounts = async ({ today, length, doc, property }) => {
+    const data = new Array(length).fill(0);
+    doc.forEach((i) => {
+        const creationDate = i.createdAt;
+        const MonthDiff = (today.getMonth() - creationDate.getMonth() + 12) % 12;
+        if (MonthDiff < length) {
+            data[length - 1 - MonthDiff] += property ? i[property] : 1;
+        }
+    });
+    return data;
+};

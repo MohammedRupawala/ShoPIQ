@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose,{Document} from "mongoose"
 import {  invalidateCacheProps, orderItemsType } from "../types/type.js"
 import { myCache } from "../app.js"
 import { Product } from "../models/products.js"
@@ -58,7 +58,7 @@ export const decreaseStock = async(orderItems: orderItemsType[]) => {
 
 export const calculatePercentage = (thisMonth:number,lastMonth:number)=>{
     if(lastMonth == 0) return thisMonth * 100
-    const percent = ((thisMonth-lastMonth)/lastMonth) * 100
+    const percent = ((thisMonth)/lastMonth) * 100
     return Number(percent.toFixed(0))
 }
 
@@ -67,3 +67,40 @@ export const calculatePercentage = (thisMonth:number,lastMonth:number)=>{
 //         element = JSON.parse(myCache.get(key) as string)
 //    }
 // }
+
+export const getInventory =async ({allCategories,productCount} : {allCategories:string[],productCount : number})=>{
+    const CategoriesCountPromise = allCategories.map((category)=>Product.countDocuments({category}))
+        const categoriesCount = await Promise.all(CategoriesCountPromise)
+        const categories:Record<string,number>[] = []
+        allCategories.forEach((category,i)=>{
+            categories.push({
+                [category] : Math.round((categoriesCount[i] / productCount) * 100)
+            })
+        })
+        return categories
+}
+
+
+interface MyDocument extends Document{
+    createdAt:Date,
+    total?:number,
+    discount?:number
+}
+type countProps = {
+    today : Date,
+    length : number,
+    doc : MyDocument[],
+    property?:"total" | "discount"
+}
+export const getCounts = async({today,length,doc,property}:countProps)=>{
+    const data = new Array(length).fill(0)
+    doc.forEach( (i) => {
+        const creationDate = i.createdAt
+        const MonthDiff = (today.getMonth() - creationDate.getMonth() + 12) % 12
+        if(MonthDiff < length){
+            data[length - 1 -MonthDiff] += property?i[property] :  1
+        }
+    });
+   
+    return data
+}
