@@ -37,7 +37,7 @@ connectDB(mongoURI);
 
 // Routes
 app.get('/', (req, res) => {
-  res.send('Hello This is Test Server');
+  res.send('This is Test Server');
 });
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/product', productRoutes);
