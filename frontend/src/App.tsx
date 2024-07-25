@@ -1,5 +1,6 @@
 import { Suspense, lazy, useState } from 'react'
 import { BrowserRouter,Routes,Route } from 'react-router-dom'
+import {Toaster} from "react-hot-toast"
 import Loader from "./components/Loader"
 import Header from './components/header'
 const Home = lazy(()=>import("./pages/home"))
@@ -68,6 +69,7 @@ function App() {
         
       </Routes>
       </Suspense>
+      <Toaster position='bottom-center'/>
       </BrowserRouter>
     </>
   )

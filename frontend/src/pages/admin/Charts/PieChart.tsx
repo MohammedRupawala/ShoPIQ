@@ -21,6 +21,18 @@ const PieChart = () => {
             </section>
             <section>
               <div>
+              <DoughnutChart labels={["Marketing Cost","Discount","Gross Income","Production Cost","Net Margin"]}
+               data={[10.,2,1,25,4]} 
+               backgroundColor={["hsl(129,80%,80%)","hsl(69,80%,80%)","hsl(309,50%,80%)","hsl(109,50%,80%)","hsl(299,50%,80%)"]} 
+               offset={[0,0,0,0,80]}
+               legends={false}
+               cutout={"70%"}/>
+               
+              </div>
+              <h2>Revenue Distribution</h2>
+            </section>
+            <section>
+              <div>
               <DoughnutChart labels={categories.map((i)=>i.heading)}
                data={categories.map((i)=>i.value)} 
                backgroundColor={categories.map((i)=>`hsl(${i.value*4},${i.value}%,50%)`)} 
@@ -41,39 +53,6 @@ const PieChart = () => {
                
               </div>
               <h2>Stock Availability</h2>
-            </section>
-            <section>
-              <div>
-              <DoughnutChart labels={["Marketing Cost","Discount","Burnt","Production Cost","Net Margin"]}
-               data={[10.,2,1,25,4]} 
-               backgroundColor={["hsl(129,80%,80%)","hsl(69,80%,80%)","hsl(309,50%,80%)","hsl(109,50%,80%)","hsl(299,50%,80%)"]} 
-               offset={[0,0,0,0,80]}
-               legends={false}
-               cutout={"70%"}/>
-               
-              </div>
-              <h2>Stock Availability</h2>
-            </section>
-            <section>
-              <div>
-              <PieCharts labels={['Process','Shipped','Delivered']} data={[12,9,10]} backgroundColor={[
-                  'hsl(110,80%,80%)',
-                  'hsl(110,80%,50%)',
-                  'hsl(110,40%,50%)'
-                ]} offset={[0,0,50]}/>
-              </div>
-              <h2>Order Fulfillment Ratio</h2>
-            </section>
-            <section>
-              <div>
-              <DoughnutChart labels={categories.map((i)=>i.heading)}
-               data={categories.map((i)=>i.value)} 
-               backgroundColor={categories.map((i)=>`hsl(${i.value*4},${i.value}%,50%)`)} 
-               offset={[0,0,0,80]}
-               legends={false}
-               cutout={"70%"}/>
-              </div>
-              <h2>Categories Product Ratio</h2>
             </section>
             <section>
               <div>

@@ -145,7 +145,7 @@ dialog{
 .adminContainer{
   @include grid(1fr 4fr,2rem);
   height :100vh;
-  background-color:#D4D4D4;
+  background-color: white;
   >aside{
     background-color: white;
     width: 100%;
