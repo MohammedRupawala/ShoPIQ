@@ -29,7 +29,7 @@ const mongoURI = process.env.MONGO_URI || '';
 
 // Middleware
 app.use(express.json());
-app.use(cors()); // Allow all origins
+app.use(cors()); // Allow all origin
 app.use(morgan('dev'));
 
 // Connect to MongoDB
