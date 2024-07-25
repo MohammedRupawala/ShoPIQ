@@ -27,6 +27,14 @@ export const newUser = TryCatch (
          if(!_id || !name || !email || !photo || !dob || !gender ){
             return next(new errorHandler("User is  Not Created,InSufficient Details",400))
          }
+         const sameId = await User.findById({_id})
+         if(sameId){
+            return next(new errorHandler("Already Signed In",401))
+            // res.status(400).json({
+            //     success:false,
+            //     message:"Email Already Exists"
+            //    })
+         }
           user =await  User.create({
              name,
              email,
