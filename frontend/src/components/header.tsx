@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FaShoppingBag,FaSearch,FaSignInAlt, FaUser, FaSign, FaSignOutAlt } from 'react-icons/fa'
-const user={_id:"",role:""}
-const Header = () => {
+import { User } from '../types/types'
+type Props = {
+    user : User | null
+}
+const Header = ({user} : Props) => {
     const [isOpen,setIsOpen]=useState<boolean>(false)
    const logOutHandler = ()=>{
     setIsOpen(false)
@@ -14,7 +17,7 @@ const Header = () => {
             <Link to ="/search" onClick={()=>setIsOpen(false)}><FaSearch/></Link>
             <Link to="/cart" onClick={()=>setIsOpen(false)}><FaShoppingBag/></Link>
            {
-            user._id?(
+            user?._id?(
                 <>
                 <button onClick={()=>setIsOpen((prev)=>!prev)}>
                     <FaUser/>

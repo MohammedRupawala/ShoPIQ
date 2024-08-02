@@ -1,8 +1,15 @@
-import { Suspense, lazy, useState } from 'react'
+import { Suspense, lazy, useEffect, useState } from 'react'
 import { BrowserRouter,Routes,Route } from 'react-router-dom'
+import {userNotExist,userExist} from "./redux/reducer/userReducer"
 import {Toaster} from "react-hot-toast"
 import Loader from "./components/Loader"
 import Header from './components/header'
+import { onAuthStateChanged } from 'firebase/auth'
+import { auth } from './firebase'
+import { useDispatch, useSelector } from 'react-redux'
+import { getUser } from './redux/api/userAPI'
+import { userReducerIntialState } from './types/reducer-types'
+import Protected from './components/protected'
 const Home = lazy(()=>import("./pages/home"))
 const Cart = lazy(()=>import("./pages/cart"))
 const Search = lazy(()=>import("./pages/search"))
@@ -26,29 +33,53 @@ const Toss = lazy(() => import('./pages/admin/Apps/Toss'));
 const StopWatch = lazy(() => import('./pages/admin/Apps/StopWatch'));
 
 function App() {
- 
-
-  return (
+  const {user,loading} = useSelector(
+    (state : {userReducer : userReducerIntialState})=>state.userReducer
+    
+  )
+ const dispatch = useDispatch()
+  useEffect(()=>{
+    onAuthStateChanged(auth,async(users)=>{
+      if(users){
+        const data = await getUser(users.uid)
+        dispatch(userExist(data.users))
+        console.log("Logged IN")
+      }else{
+        dispatch(userNotExist())
+      }
+    })
+  },[])
+  return loading?<Loader/>:(
     <>
      <BrowserRouter>
      <Suspense fallback={<Loader/>}>
-     <Header/>
+     <Header user={user}/>
      <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/cart" element={<Cart/>}/>
         <Route path="/search" element={<Search/>}/>
         {/* Not LogedIn */}
-        <Route path="/login" element={<Login/>}/>
+       
+       <Route path="/login" 
+       element={
+       <Protected isLoggedIN={user ? false : true}>
+        <Login/>
+        </Protected>
+      }/>
+      
 
                   {/* LoggedIn User */}
-     <Route>
+     <Route element={
+      <Protected isLoggedIN={true}/>
+     }>
        <Route path="/shipping" element={<Shipping/>}/>
        <Route path="/orders" element={<Order/>}/>
       </Route>
        
 
                   {/* admin Routes */}
-      <Route>
+      <Route
+      element={<Protected isAdmin={user?.role==="admin"?true : false} isLoggedIN={true} adminRoutes={true}/>}>
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/products" element={<Products />} />
         <Route path="/admin/customer" element={<Customer />} />
@@ -76,3 +107,4 @@ function App() {
 }
 
 export default App
+
