@@ -63,6 +63,18 @@
         max-width: 400px;
         box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
         border-radius: 5px;
+        position: relative;
+        >button{
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: #ff0000;
+            transition: color 0.3s ease;
+        }
         >form{
             @include flex(column,unset,center,2rem);
             >h2{
