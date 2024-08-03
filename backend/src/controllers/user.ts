@@ -18,17 +18,17 @@ export const newUser = TryCatch (
          } = req.body;
          let  user =  await User.findById(_id);
          if(user){
-            res.status(200).json({
+           return res.status(200).json({
                 success:true,
                 message:`Loged IN,Welcome,${user.name}`
             })
          }
 
-         if(!_id || !name || !email || !photo || !dob || !gender ){
+          if(!_id || !name || !email || !photo || !dob || !gender ){
             return next(new errorHandler("User is  Not Created,InSufficient Details",400))
          }
          const sameId = await User.findById({_id})
-         if(sameId){
+          if(sameId){
             return next(new errorHandler("Already Signed In",401))
             // res.status(400).json({
             //     success:false,

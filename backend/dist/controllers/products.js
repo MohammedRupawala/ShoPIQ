@@ -71,10 +71,11 @@ export const newProduct = TryCatch(async (req, res, next) => {
     const photo = req.file;
     if (!photo)
         return next(new errorHandler("Please Add Photo", 400));
-    if (!name || !category || !photo || !price) {
-        rm(photo.path, () => {
-            console.log("Photo Removed");
-        });
+    if (!name || !category || !stock || !price) {
+        // rm(photo.path,()=>{
+        //    // console.log("photo path is" + photo.path)
+        //     console.log("Photo Removed")
+        // })
         return next(new errorHandler("Insufficient Details", 400));
     }
     const newItem = await Product.create({
@@ -135,7 +136,7 @@ export const deleteProduct = TryCatch(async (req, res, next) => {
 export const searchProduct = TryCatch(async (req, res, next) => {
     const { search, price, category, sort } = req.query;
     const page = Number(req.query.page) || 1;
-    const limit = Number(process.env.PRODUCT_PER_PAGE) || 6;
+    const limit = Number(process.env.PRODUCT_PER_PAGE) || 8;
     const skip = limit * (page - 1);
     const BaseQuery = {};
     if (search) {
@@ -150,7 +151,7 @@ export const searchProduct = TryCatch(async (req, res, next) => {
     if (category)
         BaseQuery.category = category;
     const [products, filteredProducts] = await Promise.all([
-        Product.find(BaseQuery).sort(sort && { price: sort === "asc" ? 1 : 1 })
+        Product.find(BaseQuery).sort(sort && { price: sort === "asc" ? 1 : -1 })
             .limit(limit)
             .skip(skip),
         Product.find(BaseQuery)

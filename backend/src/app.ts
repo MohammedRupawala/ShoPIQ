@@ -28,6 +28,7 @@ const port = process.env.PORT || 4000;
 const mongoURI = process.env.MONGO_URI || '';
 
 // Middleware
+app.use('/uploads', express.static('uploads'));
 app.use(express.json());
 app.use(cors()); // Allow all origin
 app.use(morgan('dev'));
@@ -44,7 +45,7 @@ app.use('/api/v1/product', productRoutes);
 app.use('/api/v1/order', orderRoutes);
 app.use('/api/v1/payment', paymentRoutes);
 app.use('/api/v1/dashboard', dashboardRoutes);
-app.use('/uploads', express.static('upload'));
+app.use('/uploads', express.static('uploads'));
 
 // Error handling middleware
 app.use(errorMiddleware);

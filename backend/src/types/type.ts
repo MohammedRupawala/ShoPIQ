@@ -22,7 +22,8 @@ export type controllerType =  (
         req: Request<any>,
         res: Response,
         next: NextFunction
-    ) => Promise<void>
+    ) => Promise<void | Response<any, Record<string, any>>>;
+
 export type searchQuery = {
     search?:string,
     sort?:string,

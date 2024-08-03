@@ -5,7 +5,7 @@ export const newUser = TryCatch(async (req, res, next) => {
     const { name, email, photo, _id, dob, gender } = req.body;
     let user = await User.findById(_id);
     if (user) {
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: `Loged IN,Welcome,${user.name}`
         });
