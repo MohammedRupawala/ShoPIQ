@@ -1,10 +1,17 @@
-import  { ReactElement, useCallback, useState } from 'react'
+import  { ReactElement, useCallback, useEffect, useState } from 'react'
 
 import { Column } from 'react-table'
 import { Link } from 'react-router-dom'
 import { FaPlus } from 'react-icons/fa'
 import TableHoc from '../../components/admin/TableHoc'
 import AdminSide from '../../components/admin/adminSide'
+import { useGetAllProductsQuery } from '../../redux/api/productAPI'
+import { server } from '../../redux/store'
+import { SkeletonLoading } from '../../components/Loader'
+import { CustomError } from '../../types/apiType'
+import toast from 'react-hot-toast'
+import { useSelector } from 'react-redux'
+import { userReducerIntialState } from '../../types/reducer-types'
 interface DataType{
   photo : ReactElement,
   name :string,
@@ -32,76 +39,35 @@ const columns:Column<DataType>[]=[{
   Header:"Action",
   accessor:"action"
 }]
-const img =
-  "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8c2hvZXN8ZW58MHx8MHx8&w=1000&q=804";
-
-const img2 = "https://m.media-amazon.com/images/I/514T0SvwkHL._SL1500_.jpg";
-
-const arr: DataType[] = [
-  {
-    photo: <img src={img} alt="Shoes" />,
-    name: "Puma Shoes ",
-    price: 690,
-    stock: 3,
-    action: <Link to="/admin/product/sajknaskd">Manage</Link>,
-  },
-
-  {
-    photo: <img src={img2} alt="Shoes" />,
-    name: "Macbook",
-    price: 232223,
-    stock: 213,
-    action: <Link to="/admin/product/sdaskdnkasjdn">Manage</Link>,
-  },
-  {
-    photo: <img src={img} alt="Shoes" />,
-    name: "Puma Shoes ",
-    price: 690,
-    stock: 3,
-    action: <Link to="/admin/product/sajknaskd">Manage</Link>,
-  },
-
-  {
-    photo: <img src={img2} alt="Shoes" />,
-    name: "Macbook",
-    price: 232223,
-    stock: 213,
-    action: <Link to="/admin/product/sdaskdnkasjdn">Manage</Link>,
-  },
-  {
-    photo: <img src={img} alt="Shoes" />,
-    name: "Puma Shoes ",
-    price: 690,
-    stock: 3,
-    action: <Link to="/admin/product/sajknaskd">Manage</Link>,
-  },
-
-  {
-    photo: <img src={img2} alt="Shoes" />,
-    name: "Macbook",
-    price: 232223,
-    stock: 213,
-    action: <Link to="/admin/product/sdaskdnkasjdn">Manage</Link>,
-  },
-  {
-    photo: <img src={img2} alt="Shoes" />,
-    name: "Macbook",
-    price: 232223,
-    stock: 213,
-    action: <Link to="/admin/product/sdaskdnkasjdn">Manage</Link>,
-  },
-];
 
 
 const Products = () => {
-  const [data] =useState(arr)
-  const Table = useCallback(
-    TableHoc<DataType>(columns,data,"dashboardProductTable","Products",true)
-    ,[])
+  const {user} = useSelector((state:{userReducer : userReducerIntialState})=>(state.userReducer)) 
+
+  const {data,isLoading,isError,error} = useGetAllProductsQuery(user?._id!)
+  const [rows,setRows] = useState<DataType[]>([])
+  useEffect(() => {
+    if (isError && error) {
+      toast.error((error as CustomError).data.message || 'An error occurred');
+    }
+  }, [isError, error]); 
+  useEffect(()=>{
+    if(data)
+      setRows(data.products.map((i)=>({
+         key:i._id,
+        name:i.name,
+        photo:<img src={`${server}/${i.photo}`}/>,
+        price:i.price,
+        stock : i.stock,
+        action:<Link to ={`/admin/product/${i._id}`}>Manage</Link>
+      }))
+    )
+  },[data])
+  const Table = TableHoc<DataType>(columns,rows,"dashboardProductTable","Products",true)()
   return (
     <div className='adminContainer'>
     <AdminSide/>
-    <main>{Table()}</main>
+    <main>{isLoading?<SkeletonLoading length={20}/>:Table}</main>
     <Link to="/admin/product/new" className='addNewProduct'>
     <FaPlus/>
     </Link>

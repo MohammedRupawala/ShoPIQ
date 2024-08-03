@@ -15,7 +15,7 @@ function TableHoc<T extends object>(
             columns,
             data,
             initialState:{
-                pageSize:4
+                pageSize:8
             },
             showPagination : false
             
@@ -26,7 +26,7 @@ function TableHoc<T extends object>(
         return (
         <div className={containerClassname}>
             <h2 className="heading">{heading}</h2>
-            <table className='table' {...getTableProps}>
+            <table className='table' {...getTableProps()}>
                 <thead >
                     {
                         headerGroups.map((headerGroup)=>(
@@ -42,7 +42,7 @@ function TableHoc<T extends object>(
                         ))
                     }
                 </thead>
-                <tbody {...getTableBodyProps}>
+                <tbody {...getTableBodyProps()}>
                     {
                         page.map((row)=>{
                             prepareRow(row);

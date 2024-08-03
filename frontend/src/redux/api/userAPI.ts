@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { User } from "../../types/types";
-import { newUserResponse, userResponse } from "../../types/apiType";
+import { messageResponse,userResponse } from "../../types/apiType";
 import { server } from "../store";
 import axios from "axios";
 
@@ -10,7 +10,7 @@ export const userAPI = createApi({
     baseUrl : `${import.meta.env.VITE_SERVER}/api/v1/user/`
   }),
   endpoints:(builder)=>({
-    login:builder.mutation<newUserResponse,User>({
+    login:builder.mutation<messageResponse,User>({
       query : (user)=>({
         url : "new",
         method:"POST",
