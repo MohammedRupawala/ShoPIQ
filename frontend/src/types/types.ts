@@ -28,6 +28,14 @@ export type searchProductQueryType = {
 
 export  type newProductType = {
     id: string,
-    formData : FormData
+    formData ?: FormData
 }
-
+export type updateProductType = {
+    id:string,
+    productId:string,
+    formData:FormData
+}
+export type deleteProductType = {
+    id:string,
+    productId:string,
+}

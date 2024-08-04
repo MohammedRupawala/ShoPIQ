@@ -23,7 +23,10 @@ export interface searchResponse {
     products : Product[],
     totalPages : number
 }
-
+export interface singleResponse {
+    succuess: boolean,
+    product : Product
+}
 export type CustomError = {
     status : number,
     data : {

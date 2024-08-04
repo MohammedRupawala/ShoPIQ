@@ -1,11 +1,11 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
-import AdminSide from '../../../components/admin/adminSide'
-import { useSelector } from 'react-redux'
-import { userReducerIntialState } from '../../../types/reducer-types'
-import { useCreateNewProductMutation } from '../../../redux/api/productAPI'
 import toast from 'react-hot-toast'
-import { resToast } from '../../../utils/features'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import AdminSide from '../../../components/admin/adminSide'
+import { useCreateNewProductMutation } from '../../../redux/api/productAPI'
+import { userReducerIntialState } from '../../../types/reducer-types'
+import { resToast } from '../../../utils/features'
 
 
 const NewProduct = () => {
@@ -17,7 +17,7 @@ const NewProduct = () => {
   const[category,setCategory] = useState<string>("")
   const changeImage = (e:ChangeEvent<HTMLInputElement>)=>{
     const file:File | undefined = e.target.files?.[0]
-    const reader: FileReader =   new FileReader()
+   // const reader: FileReader =   new FileReader()
     if(file){
       // reader.readAsDataURL(file);
       // reader.onloadend = ()=>{
@@ -77,7 +77,7 @@ const NewProduct = () => {
             <label>Price</label>
             <input
             required
-             type="numeber"
+             type="number"
              placeholder='Price'
              value={price}
              onChange={(e)=>{
